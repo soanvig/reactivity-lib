@@ -1,0 +1,23 @@
+{
+  "name": "reactivity-lib",
+  "version": "0.0.1",
+  "scripts": {
+    "test": "jest --watch --coverage",
+    "test:ci": "jest --ci",
+    "test:nocov": "jest --watch",
+    "build": "yarn run rollup -c"
+  },
+  "devDependencies": {
+    "babel-plugin-module-resolver": "^3.0.0",
+    "babel-preset-env": "^1.6.1",
+    "jest": "^22.2.2",
+    "rollup": "^0.55.5",
+    "rollup-plugin-alias": "^1.4.0",
+    "rollup-plugin-commonjs": "^8.3.0",
+    "rollup-plugin-json": "^2.3.0",
+    "rollup-plugin-node-resolve": "^3.0.2"
+  },
+  "jest": {
+    "testPathIgnorePatterns": ["/node_modules/", "/scripts/"]
+  }
+}
