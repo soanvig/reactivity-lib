@@ -24,6 +24,10 @@ describe('proxyArray', () => {
     Dependency.prototype.notify = originalNotify;
   });
 
+  it('should return true on __proxy__', () => {
+    expect(array.__proxy__).toBe(true);
+  });
+
   describe('getting sample mutating method: push', () => {
     it('should preserve original behavior', () => {
       array.push(4);

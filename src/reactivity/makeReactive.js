@@ -1,20 +1,32 @@
+import { isPlainObject, isArray } from '@/helpers';
 import Dependency from './Dependency';
-
 import proxyArray from './proxyArray';
+
+export function traverseArray (array) {
+  array.forEach((item, index) => {
+    // eslint-disable-next-line no-use-before-define
+    array[index] = makeReactive(item);
+  });
+}
 
 // To make any value interactive, we need to define setter&getter
 // To do that we use Object.defineProperty (ES5.1)
-export default function makeReactive (obj) {
-  if (obj instanceof Array) {
+export function makeReactive (obj) {
+  if (!isArray(obj) && !isPlainObject(obj)) {
+    return obj;
+  }
+
+  if (isArray(obj)) {
     const dependency = new Dependency();
     obj = proxyArray(obj, dependency);
+    traverseArray(obj);
 
     return obj;
   }
 
   Object.keys(obj).forEach((key) => {
     // Traverse down each object
-    if (obj[key] instanceof Object && obj[key].constructor === Object) {
+    if (isPlainObject(obj[key])) {
       makeReactive(obj[key]);
 
       // Return, because we don't want object to be reactive by itself
@@ -44,3 +56,5 @@ export default function makeReactive (obj) {
     });
   });
 }
+
+export default makeReactive;

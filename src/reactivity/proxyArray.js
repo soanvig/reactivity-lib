@@ -17,6 +17,11 @@ const mutatingMethods = [
 export default function proxyArray (originalArray, dependency) {
   return new Proxy(originalArray, {
     get (array, target) {
+      // Useful information about the Proxy
+      if (target === '__proxy__') {
+        return true;
+      }
+
       // if required thing is mutating original method
       // we want to call notify, because array gets modified
       if (mutatingMethods.includes(target)) {
