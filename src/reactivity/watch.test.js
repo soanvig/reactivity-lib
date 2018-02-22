@@ -29,7 +29,9 @@ describe('watch', () => {
     });
 
     afterEach(() => {
-      Dependency.activeFunction = origActiveFunction;
+      Object.defineProperty(Dependency, 'activeFunction', {
+        value: origActiveFunction
+      });
       activeFunctionSetMockCalls = [];
     });
 
