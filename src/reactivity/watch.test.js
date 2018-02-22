@@ -2,7 +2,6 @@ import Dependency from './Dependency';
 import watch from './watch';
 
 import * as helpers from '%/helpers';
-import { revertListenOnValue } from '../../tests/helpers';
 
 describe('watch', () => {
   let mock;
