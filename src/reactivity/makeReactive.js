@@ -12,13 +12,18 @@ export function traverseArray (array) {
 // To make any value interactive, we need to define setter&getter
 // To do that we use Object.defineProperty (ES5.1)
 export function makeReactive (obj) {
+  // if the object is not supported, it should just return itself
   if (!isArray(obj) && !isPlainObject(obj)) {
     return obj;
   }
 
   if (isArray(obj)) {
     const dependency = new Dependency();
+
+    // create proxy on array, to track changes
     obj = proxyArray(obj, dependency);
+
+    // traverse down array
     traverseArray(obj);
 
     return obj;
