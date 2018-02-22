@@ -2,7 +2,7 @@
   "name": "reactivity-lib",
   "version": "0.0.1",
   "scripts": {
-    "test": "jest --watch --coverage",
+    "test": "jest --watch --coverage --collectCoverageFrom=src/**/*.js",
     "test:ci": "jest --ci",
     "test:nocov": "jest --watch",
     "build": "yarn run rollup -c"
