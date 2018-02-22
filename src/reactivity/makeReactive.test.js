@@ -28,6 +28,15 @@ describe('makeReactive', () => {
     expect(barDescriptor.set).toBeTruthy();
   });
 
+  describe('array', () => {
+    it('should proxy array', () => {
+      const array = makeReactive([1, 2, 3]);
+      const test = array[0];
+
+      expect(dependMock).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('nested object', () => {
     beforeEach(() => {
       state = {
@@ -51,116 +60,6 @@ describe('makeReactive', () => {
 
       expect(descriptor.get).toBeUndefined();
       expect(descriptor.set).toBeUndefined();
-    });
-  });
-
-  describe('array', () => {
-    // https://github.com/vuejs/vue/blob/dev/src/core/observer/array.js
-    // const methodsToPatch = [
-    //   'push',
-    //   'pop',
-    //   'shift',
-    //   'unshift',
-    //   'splice',
-    //   'sort',
-    //   'reverse'
-    // ]
-
-    let array;
-
-    beforeEach(() => {
-      array = [1, 2, 3];
-      makeReactive(array);
-    });
-
-    describe('push', () => {
-      it('should preserve original behavior', () => {
-        array.push(4);
-        expect(array).toHaveLength(4);
-      });
-
-      it('should set & notify', () => {
-        array.push(4);
-        expect(notifyMock).toHaveBeenCalledTimes(1);
-      });
-    });
-
-    describe('pop', () => {
-      it('should preserve original behavior', () => {
-        const result = array.pop();
-        expect(result).toBe(3);
-        expect(array).toHaveLength(2);
-      });
-
-      it('should set & notify', () => {
-        array.pop();
-        expect(notifyMock).toHaveBeenCalledTimes(1);
-      });
-    });
-
-    describe('shift', () => {
-      it('should preserve original behavior', () => {
-        const result = array.shift();
-        expect(result).toBe(1);
-        expect(array).toHaveLength(2);
-      });
-
-      it('should set & notify', () => {
-        array.shift();
-        expect(notifyMock).toHaveBeenCalledTimes(1);
-      });
-    });
-
-    describe('unshift', () => {
-      it('should preserve original behavior', () => {
-        const result = array.unshift(0);
-        expect(result).toBe(4);
-        expect(array[0]).toBe(0);
-      });
-
-      it('should set & notify', () => {
-        array.unshift(0);
-        expect(notifyMock).toHaveBeenCalledTimes(1);
-      });
-    });
-
-    describe('splice', () => {
-      it('should preserve original behavior', () => {
-        const result = array.splice(0, 1);
-        expect(result).toContain(1);
-        expect(array).toHaveLength(2);
-      });
-
-      it('should set & notify', () => {
-        array.splice(0, 1);
-        expect(notifyMock).toHaveBeenCalledTimes(1);
-      });
-    });
-
-    describe('sort', () => {
-      array = [3, 2, 1];
-
-      it('should preserve original behavior', () => {
-        array.sort();
-        expect(array[0]).toBe(1);
-      });
-
-      it('should set & notify', () => {
-        array.sort();
-        expect(notifyMock).toHaveBeenCalledTimes(1);
-      });
-    });
-
-    describe('reverse', () => {
-      it('should preserve original behavior', () => {
-        array.reverse();
-        expect(array[0]).toBe(3);
-      });
-
-      it('should set & notify', () => {
-        array.reverse();
-        expect(notifyMock).toHaveBeenCalledTimes(1);
-      });
     });
   });
 

@@ -1,16 +1,15 @@
 import Dependency from './Dependency';
-import { reactiveArrayProto } from './reactiveArrayProto';
+
+import proxyArray from './proxyArray';
 
 // To make any value interactive, we need to define setter&getter
 // To do that we use Object.defineProperty (ES5.1)
 export default function makeReactive (obj) {
   if (obj instanceof Array) {
-    obj.__dep__ = new Dependency();
-    obj.__proto__ = reactiveArrayProto;
-    obj.forEach((item) => {
-      makeReactive(item);
-    });
-    return;
+    const dependency = new Dependency();
+    obj = proxyArray(obj, dependency);
+
+    return obj;
   }
 
   Object.keys(obj).forEach((key) => {
