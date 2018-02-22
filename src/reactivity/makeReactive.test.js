@@ -70,6 +70,7 @@ describe('makeReactive', () => {
 
     beforeEach(() => {
       array = [1, 2, 3];
+      makeReactive(array);
     });
 
     describe('push', () => {
@@ -81,11 +82,6 @@ describe('makeReactive', () => {
       it('should set & notify', () => {
         array.push(4);
         expect(notifyMock).toHaveBeenCalledTimes(1);
-      });
-
-      it('should not notify if no argument', () => {
-        array.push();
-        expect(notifyMock).toHaveBeenCalledTimes(0);
       });
     });
 
@@ -125,11 +121,6 @@ describe('makeReactive', () => {
       it('should set & notify', () => {
         array.unshift(0);
         expect(notifyMock).toHaveBeenCalledTimes(1);
-      });
-
-      it('should not notify if no argument', () => {
-        array.unshift();
-        expect(notifyMock).toHaveBeenCalledTimes(0);
       });
     });
 
