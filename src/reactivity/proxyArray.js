@@ -4,6 +4,8 @@
  * adds depending method to getting array (which works even with forEach and map!)
  */
 
+import { traverseArray } from './makeReactive';
+
 const mutatingMethods = [
   'push',
   'pop',
@@ -13,6 +15,13 @@ const mutatingMethods = [
   'sort',
   'reverse'
 ];
+
+// istanbul ignore next
+const inserted = {
+  push: (args) => args,
+  unshift: (args) => args,
+  splice: (args) => args.slice(2)
+};
 
 export default function proxyArray (originalArray, dependency) {
   return new Proxy(originalArray, {
@@ -26,6 +35,13 @@ export default function proxyArray (originalArray, dependency) {
       // we want to call notify, because array gets modified
       if (mutatingMethods.includes(target)) {
         return (...args) => {
+          // because some methods may add something
+          // we need to traverse these things
+          const itemsInserted = inserted[target];
+          if (itemsInserted) {
+            traverseArray(itemsInserted(args));
+          }
+
           const result = originalArray[target](...args);
           dependency.notify();
           return result;

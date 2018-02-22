@@ -40,6 +40,20 @@ describe('proxyArray', () => {
     });
   });
 
+  describe('getting sample mutating inserting method: push', () => {
+    it('should traverse inserted items', () => {
+      array.push([true]);
+      expect(array[3].__proxy__).toBe(true);
+    });
+  });
+
+  describe('getting sample mutating not inserting method: pop', () => {
+    it('should not traverse "inserted" items', () => {
+      const popped = array.pop();
+      expect(popped.__proxy__).toBeFalsy();
+    });
+  });
+
   describe('getting item from array', () => {
     it('should return item', () => {
       expect(array[0]).toBe(1);
