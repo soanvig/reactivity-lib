@@ -7,6 +7,9 @@ export default function makeReactive (obj) {
   if (obj instanceof Array) {
     obj.__dep__ = new Dependency();
     obj.__proto__ = reactiveArrayProto;
+    obj.forEach((item) => {
+      makeReactive(obj);
+    });
     return;
   }
 
