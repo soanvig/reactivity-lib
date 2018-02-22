@@ -26,6 +26,32 @@ describe('makeReactive', () => {
     expect(barDescriptor.set).toBeTruthy();
   });
 
+  describe('nested object', () => {
+    beforeEach(() => {
+      state = {
+        foo: {
+          bar: null
+        }
+      };
+
+      makeReactive(state);
+    });
+
+    it('should have getter and setter on properties', () => {
+      const descriptor = Object.getOwnPropertyDescriptor(state.foo, 'bar');
+
+      expect(descriptor.get).toBeTruthy();
+      expect(descriptor.set).toBeTruthy();
+    });
+
+    it('should not have getter and setter on itself', () => {
+      const descriptor = Object.getOwnPropertyDescriptor(state, 'foo');
+
+      expect(descriptor.get).toBeUndefined();
+      expect(descriptor.set).toBeUndefined();
+    });
+  });
+
   describe('getter', () => {
     it('should return object value', () => {
       expect(state.foo).toBeNull();
