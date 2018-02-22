@@ -4,6 +4,14 @@ import Dependency from './Dependency';
 // To do that we use Object.defineProperty (ES5.1)
 export default function makeReactive (obj) {
   Object.keys(obj).forEach((key) => {
+    // Traverse down each object
+    if (obj[key] instanceof Object && obj[key].constructor === Object) {
+      makeReactive(obj[key]);
+
+      // Return, because we don't want object to be reactive by itself
+      return;
+    }
+
     // Because of JS clousure anything declared here
     // will be applied only to that property.
 
