@@ -1,6 +1,9 @@
 import Dependency from './Dependency';
 import watch from './watch';
 
+import * as helpers from '%/helpers';
+import { revertListenOnValue } from '../../tests/helpers';
+
 describe('watch', () => {
   let mock;
 
@@ -14,24 +17,21 @@ describe('watch', () => {
   });
 
   describe('returned function', () => {
-    const origActiveFunction = Dependency.activeFunction;
     let activeFunctionSetMockCalls = [];
 
-    beforeEach(() => {
-      function activeFunctionSetMock () {
-        activeFunctionSetMockCalls.push(arguments);
-      }
+    function activeFunctionSetMock () {
+      activeFunctionSetMockCalls.push(arguments);
+    }
 
-      Object.defineProperty(Dependency, 'activeFunction', {
+    beforeEach(() => {
+      helpers.listenOnValue(Dependency, 'activeFunction', {
         get: jest.fn(),
         set: activeFunctionSetMock
       });
     });
 
     afterEach(() => {
-      Object.defineProperty(Dependency, 'activeFunction', {
-        value: origActiveFunction
-      });
+      helpers.revertListenOnValue(Dependency, 'activeFunction');
       activeFunctionSetMockCalls = [];
     });
 
