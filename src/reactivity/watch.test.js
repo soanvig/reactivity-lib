@@ -1,8 +1,6 @@
 import Dependency from './Dependency';
 import watch from './watch';
 
-import * as helpers from '%/helpers';
-
 describe('watch', () => {
   let mock;
 
@@ -16,24 +14,6 @@ describe('watch', () => {
   });
 
   describe('returned function', () => {
-    let activeFunctionSetMockCalls = [];
-
-    function activeFunctionSetMock () {
-      activeFunctionSetMockCalls.push(arguments);
-    }
-
-    beforeEach(() => {
-      helpers.listenOnValue(Dependency, 'activeFunction', {
-        get: jest.fn(),
-        set: activeFunctionSetMock
-      });
-    });
-
-    afterEach(() => {
-      helpers.revertListenOnValue(Dependency, 'activeFunction');
-      activeFunctionSetMockCalls = [];
-    });
-
     it('should call provided function', () => {
       const innerFunction = watch(mock);
       innerFunction();
@@ -41,15 +21,36 @@ describe('watch', () => {
     });
 
     it('should save itself as activeFunction', () => {
-      const innerFunction = watch(mock);
+      const innerFunction = watch(() => {
+        expect(Dependency.activeFunction).toBe(innerFunction);
+      });
+
       innerFunction();
-      expect(activeFunctionSetMockCalls[0]).toContain(innerFunction);
     });
 
     it('should fallback activeFunction to null', () => {
       const innerFunction = watch(mock);
       innerFunction();
-      expect(activeFunctionSetMockCalls[1]).toContain(null);
+      expect(Dependency.activeFunction).toBe(null);
+    });
+  });
+
+  describe('nested watched functions', () => {
+    let inner;
+    let outer;
+
+    it('should keep activeFunctions order', () => {
+      inner = watch(() => {
+        expect(Dependency.activeFunction).toBe(inner);
+      });
+      outer = watch(() => {
+        expect(Dependency.activeFunction).toBe(outer);
+        inner();
+        expect(Dependency.activeFunction).toBe(outer);
+      });
+
+      outer();
+      expect(Dependency.activeFunction).toBe(null);
     });
   });
 });

@@ -28,6 +28,24 @@ class Dependency {
 // Because JS is one-threaded, only one function
 // can be called at any time. Because of that - simplified - statement
 // we can save that function in 'global' object.
-Dependency.activeFunction = null;
+const functionStack = [];
+
+Object.defineProperty(Dependency, 'activeFunction', {
+  get () {
+    if (functionStack.length === 0) {
+      return null;
+    }
+
+    return functionStack[functionStack.length - 1];
+  },
+
+  set (value) {
+    if (value === null) {
+      functionStack.pop();
+    } else if (typeof value === 'function') {
+      functionStack.push(value);
+    }
+  }
+});
 
 export default Dependency;
